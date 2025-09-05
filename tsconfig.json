@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    /* Output */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Target & Modules */
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+
+    /* Type Definitions */
+    "lib": ["ESNext"],
+    "types": ["node"],
+
+    /* Strictness */
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* Debugging & Declarations */
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    /* Modern TS Features */
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"],
+  "paths": {
+    "@controllers/*": ["./src/controllers/*"],
+    "@middlewares/*": ["./src/middlewares/*"],
+    "@models/*": ["./src/models/*"],
+    "@repositories": ["./src/repositories"],
+    "@routes/*": ["./src/routes/*"],
+    "@services/*": ["./src/services/*"],
+    "@utils/*": ["./src/utils/*"]
+  }
+}
