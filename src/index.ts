@@ -1,5 +1,8 @@
 import Server from './server.ts';
+import dotenv from 'dotenv';
 
-const server = new Server();
+dotenv.config();
 
-server.start();
+const server = new Server(3000);
+
+server.listen();
