@@ -7,6 +7,81 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  CANCELLED
+  OVERDUE
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  firstName String   @db.VarChar(100)
+  lastName  String   @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  taxProfiles TaxProfile[]
+}
+
+// TODO: add session model for JWT authentication to manage user sessions and manage the JWT tokens
+
+model TaxProfile {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String   @db.VarChar(255)
+  taxId      String   @unique @db.VarChar(50)
+  address    String   @db.VarChar(500)
+  city       String   @db.VarChar(100)
+  postalCode String   @db.VarChar(20)
+  createdAt  DateTime @default(now()) @db.Timestamptz
+  updatedAt  DateTime @updatedAt @db.Timestamptz
+
+  userId   String    @db.Uuid
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+
+  @@index([userId])
+}
+
+model Invoice {
+  id          String        @id @default(uuid()) @db.Uuid
+  number      String        @unique @db.VarChar(50)
+  status      InvoiceStatus @default(DRAFT)
+  issueDate   DateTime      @db.Timestamptz
+  dueDate     DateTime      @db.Timestamptz
+  subtotal    Decimal       @db.Decimal(10, 2)
+  taxAmount   Decimal       @db.Decimal(10, 2)
+  total       Decimal       @db.Decimal(10, 2)
+  description String?       @db.Text
+  createdAt   DateTime      @default(now()) @db.Timestamptz
+  updatedAt   DateTime      @updatedAt @db.Timestamptz
+
+  taxProfileId String        @db.Uuid
+  taxProfile   TaxProfile    @relation(fields: [taxProfileId], references: [id], onDelete: Restrict)
+  items        InvoiceItem[]
+
+  @@index([taxProfileId])
+  @@index([status])
+  @@index([issueDate])
+  @@index([dueDate])
+}
+
+model InvoiceItem {
+  id          String  @id @default(uuid()) @db.Uuid
+  description String  @db.VarChar(500)
+  quantity    Decimal @db.Decimal(10, 2)
+  unitPrice   Decimal @db.Decimal(10, 2)
+  lineTotal   Decimal @db.Decimal(10, 2)
+
+  invoiceId String  @db.Uuid
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
 }
