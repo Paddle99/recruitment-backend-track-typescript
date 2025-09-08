@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import compression from 'compression';
+import prisma from './db/prisma.ts';
 
 class Server {
     private app: express.Application;
@@ -16,7 +17,7 @@ class Server {
         this.initializeMiddlewares();
         this.initializeControllers();
         this.initializeRoutes();
-        this.initializeDbConnection();
+        this.checkDbConnection();
     }
 
     private initializeMiddlewares(): void {
@@ -41,7 +42,15 @@ class Server {
 
     private initializeRoutes(): void {}
 
-    private initializeDbConnection(): void {}
+    private async checkDbConnection(): Promise<void> {
+        try {
+            await prisma.$queryRaw`SELECT 1`;
+            console.log('Database connection is OK');
+        } catch (error) {
+            console.error('Database connection failed:', error);
+            process.exit(1);
+        }
+    }
 
     public listen(): void {
         this.app.listen(this.port, () => {
