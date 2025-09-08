@@ -20,9 +20,10 @@
     "baseUrl": ".",
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
+      "@db/*": ["./src/db/*"],
       "@middlewares/*": ["./src/middlewares/*"],
       "@models/*": ["./src/models/*"],
-      "@repositories/*": ["./src/repositories/*"],
+      "@repositories/*": ["./src/db/repositories/*"],
       "@routes/*": ["./src/routes/*"],
       "@services/*": ["./src/services/*"],
       "@utils/*": ["./src/utils/*"]
