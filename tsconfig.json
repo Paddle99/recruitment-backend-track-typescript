@@ -11,6 +11,7 @@
     "noEmit": false,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
+    "resolveJsonModule": true,
 
     /* Type Definitions */
     "lib": ["ES2022"],
@@ -41,6 +42,7 @@
     "sourceMap": true,
 
     /* Modern TS Features */
+    "experimentalDecorators": true,
     "verbatimModuleSyntax": false,
     "isolatedModules": true
   },
