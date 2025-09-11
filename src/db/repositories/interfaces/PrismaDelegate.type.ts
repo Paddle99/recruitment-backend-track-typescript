@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface IBaseRepository<TModel> {
+export type PrismaDelegate<TModel> = {
     findMany(args?: any): Promise<TModel[]>;
     findUnique(args: any): Promise<TModel | null>;
-    create(data: any): Promise<TModel>;
-    update(args: { where: any; data: any }): Promise<TModel>;
+    create(args: { data: TModel }): Promise<TModel>;
+    update(args: { where: any; data: Partial<TModel> }): Promise<TModel>;
     delete(args: { where: any }): Promise<TModel>;
-}
+};

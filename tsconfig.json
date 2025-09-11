@@ -3,15 +3,17 @@
     /* Output */
     "rootDir": "./src",
     "outDir": "./dist",
-    
+
     /* Target & Modules */
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": false,
-    "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true,
     "resolveJsonModule": true,
+
+    /* Import/Export moderni */
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
 
     /* Type Definitions */
     "lib": ["ES2022"],
@@ -42,9 +44,7 @@
     "sourceMap": true,
 
     /* Modern TS Features */
-    "experimentalDecorators": true,
-    "verbatimModuleSyntax": false,
-    "isolatedModules": true
+    "experimentalDecorators": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
