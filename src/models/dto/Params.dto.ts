@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const IdParamSchema = z.object({
-    id: z.string(),
+    id: z.uuid(),
 });
 
 export const EmailParamSchema = z.object({

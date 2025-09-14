@@ -9,6 +9,7 @@ import {
     UsersPaginatedResponseSchema,
     type UserPaginatedResponseDTO,
 } from '../models/dto/User.dto.js';
+import { ServerError } from '@middlewares/ServerError.js';
 
 export class UserController {
     constructor(private userService: UserService) {}
@@ -20,8 +21,11 @@ export class UserController {
     ) => {
         try {
             const users = await this.userService.getAllUsers();
-            // add errors
+
+            if (!users) throw new ServerError('Users not found', 404);
+
             const result = UsersListSchema.parse(users);
+
             return res.status(200).json(result);
         } catch (err) {
             next(err);
@@ -35,10 +39,13 @@ export class UserController {
     ) => {
         try {
             const id = req.params.id;
+
             const user = await this.userService.getUserById(id);
-            //   if (!user) throw new ServerError("User not found", 404);
+
+            if (!user) throw new ServerError('User not found', 404);
 
             const result = UserSchema.parse(user);
+
             return res.status(200).json(result);
         } catch (err) {
             next(err);
@@ -52,10 +59,13 @@ export class UserController {
     ) => {
         try {
             const email = req.params.email;
+
             const user = await this.userService.getUserByEmail(email);
-            //   if (!user) throw new ServerError("User not found", 404);
+
+            if (!user) throw new ServerError('User not found', 404);
 
             const result = UserSchema.parse(user);
+
             return res.status(200).json(result);
         } catch (err) {
             next(err);
@@ -69,7 +79,11 @@ export class UserController {
     ) => {
         try {
             const data = UserCreateSchema.parse(req.body);
+
             const user = await this.userService.createUser(data);
+
+            if (!user) throw new ServerError('User not created', 400);
+
             return res.status(201).json(UserSchema.parse(user));
         } catch (err) {
             next(err);
@@ -83,9 +97,12 @@ export class UserController {
     ) => {
         try {
             const id = req.params.id;
+
             const data = UserUpdateSchema.parse(req.body);
+
             const user = await this.userService.updateUser(id, data);
-            //   if (!user) throw new ServerError("User not found", 404);
+
+            if (!user) throw new ServerError('User not found', 404);
 
             return res.status(200).json(UserSchema.parse(user));
         } catch (err) {
@@ -100,8 +117,10 @@ export class UserController {
     ) => {
         try {
             const id = req.params.id;
+
             const user = await this.userService.deleteUser(id);
-            //   if (!user) throw new ServerError("User not found", 404);
+
+            if (!user) throw new ServerError('User not found', 404);
 
             return res.status(200).json(UserSchema.parse(user));
         } catch (err) {
@@ -119,6 +138,8 @@ export class UserController {
 
             const { data, total } =
                 await this.userService.getUsersPaginated(query);
+
+            if (!data) throw new ServerError('Users not found', 404);
 
             const response: UserPaginatedResponseDTO =
                 UsersPaginatedResponseSchema.parse({

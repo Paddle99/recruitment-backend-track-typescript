@@ -9,6 +9,7 @@ import {
     type InvoiceItemsPaginatedResponseDTO,
     InvoiceItemsPaginatedResponseSchema,
 } from '@dto/InvoiceItem.dto.js';
+import { ServerError } from '@middlewares/ServerError.js';
 
 export class InvoiceItemController {
     constructor(private invoiceItemService: InvoiceItemService) {}
@@ -20,7 +21,11 @@ export class InvoiceItemController {
     ) => {
         try {
             const items = await this.invoiceItemService.getAllInvoiceItems();
+
+            if (!items) throw new ServerError('Items not found', 404);
+
             const result = InvoiceItemsListSchema.parse(items);
+
             return res.status(200).json(result);
         } catch (err) {
             next(err);
@@ -34,8 +39,13 @@ export class InvoiceItemController {
     ) => {
         try {
             const id = req.params.id;
+
             const item = await this.invoiceItemService.getInvoiceItemById(id);
+
+            if (!item) throw new ServerError('Item not found', 404);
+
             const result = InvoiceItemSchema.parse(item);
+
             return res.status(200).json(result);
         } catch (err) {
             next(err);
@@ -49,7 +59,11 @@ export class InvoiceItemController {
     ) => {
         try {
             const data = InvoiceItemCreateSchema.parse(req.body);
+
             const item = await this.invoiceItemService.createInvoiceItem(data);
+
+            if (!item) throw new ServerError('Item not created', 400);
+
             return res.status(201).json(InvoiceItemSchema.parse(item));
         } catch (err) {
             next(err);
@@ -64,10 +78,14 @@ export class InvoiceItemController {
         try {
             const id = req.params.id;
             const data = InvoiceItemUpdateSchema.parse(req.body);
+
             const item = await this.invoiceItemService.updateInvoiceItem(
                 id,
                 data
             );
+
+            if (!item) throw new ServerError('Item not found', 404);
+
             return res.status(200).json(InvoiceItemSchema.parse(item));
         } catch (err) {
             next(err);
@@ -82,6 +100,9 @@ export class InvoiceItemController {
         try {
             const id = req.params.id;
             const item = await this.invoiceItemService.deleteInvoiceItem(id);
+
+            if (!item) throw new ServerError('Item not found', 404);
+
             return res.status(200).json(InvoiceItemSchema.parse(item));
         } catch (err) {
             next(err);
@@ -98,6 +119,8 @@ export class InvoiceItemController {
 
             const { data, total } =
                 await this.invoiceItemService.getInvoiceItemsPaginated(query);
+
+            if (!data) throw new ServerError('Items not found', 404);
 
             const items = data.map((item) => ({
                 ...item,

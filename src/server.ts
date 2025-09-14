@@ -11,6 +11,7 @@ import openApiDoc from '@docs/openApi.js';
 import { TaxProfileRoute } from '@routes/TaxProfile.route.js';
 import { InvoiceRoute } from '@routes/Invoice.route.js';
 import { InvoiceItemRoute } from '@routes/InvoiceItem.route.js';
+import { errorHandler } from '@middlewares/ServerError.js';
 
 class Server {
     private app: express.Application;
@@ -25,6 +26,7 @@ class Server {
 
         this.initializeMiddlewares();
         this.initializeControllersAndRoutes();
+        this.initializeErrorHandling();
         this.checkDbConnection();
     }
 
@@ -72,7 +74,9 @@ class Server {
         this.app.use(invoiceItemRoute.path, invoiceItemRoute.router);
     }
 
-    private initializeErrorHandling(): void {}
+    private initializeErrorHandling(): void {
+        this.app.use(errorHandler);
+    }
 
     private async checkDbConnection(): Promise<void> {
         try {
