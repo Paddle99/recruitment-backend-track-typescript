@@ -20,6 +20,7 @@
     "types": ["node"],
 
     /* Path Mapping */
+    "inlineSources": true,
     "baseUrl": ".",
     "paths": {
       "@controllers/*": ["src/controllers/*"],
