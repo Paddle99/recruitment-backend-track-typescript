@@ -2,11 +2,13 @@ import type { IUserRepository } from '@db/repositories/interfaces/UserRepository
 import { UserRepository } from '@db/repositories/UserRepository.js';
 import type {
     UserCreateDTO,
-    UserPaginationDTO,
     UserUpdateDTO,
+    UserPaginationDTO,
+    LoginResponseDTO,
 } from '@dto/User.dto.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { LoginResponseSchema } from '@dto/User.dto.js';
 
 export class UserService {
     private userRepository: IUserRepository;
@@ -27,7 +29,19 @@ export class UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public async login(email: string, password: string) {
+    public async createUser(data: UserCreateDTO) {
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+
+        return this.userRepository.create({
+            ...data,
+            password: hashedPassword,
+        });
+    }
+
+    public async login(
+        email: string,
+        password: string
+    ): Promise<LoginResponseDTO | null> {
         const user = await this.userRepository.findByEmail(email);
         if (!user) return null;
 
@@ -43,16 +57,7 @@ export class UserService {
             { expiresIn: '1h' }
         );
 
-        return { user, token };
-    }
-
-    public async createUser(data: UserCreateDTO) {
-        const hashedPassword = await bcrypt.hash(data.password, 10);
-
-        return this.userRepository.create({
-            ...data,
-            password: hashedPassword,
-        });
+        return LoginResponseSchema.parse({ user, token });
     }
 
     public async updateUser(id: string, data: UserUpdateDTO) {
@@ -66,12 +71,17 @@ export class UserService {
     public async getUsersPaginated(paginationArgs: UserPaginationDTO) {
         const { skip, take, ...filters } = paginationArgs;
 
-        const where = Object.entries(filters).reduce((acc, [key, value]) => {
-            if (value)
-                acc[key] = { contains: value as string, mode: 'insensitive' };
-            return acc;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }, {} as any);
+        const where = Object.entries(filters).reduce(
+            (acc, [key, value]) => {
+                if (value)
+                    acc[key] = {
+                        contains: value as string,
+                        mode: 'insensitive',
+                    };
+                return acc;
+            },
+            {} as Record<string, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+        );
 
         return this.userRepository.findManyWithPagination({
             skip,

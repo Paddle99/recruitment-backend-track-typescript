@@ -64,8 +64,14 @@ export const UserPaginationSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-    email: z.email(),
-    password: z.string().min(6),
+    email: z.email().meta({
+        description: 'Email address of the user',
+        example: 'user@example.com',
+    }),
+    password: z.string().min(6).meta({
+        description: 'Password (min 6 chars)',
+        example: 'P@ssw0rd123',
+    }),
 });
 
 // response schemas
@@ -144,6 +150,7 @@ export const UsersPaginatedResponseSchema = z.object({
 });
 
 export const LoginResponseSchema = z.object({
+    user: UserSchema,
     token: z.string().describe('JWT token to access protected routes'),
 });
 
