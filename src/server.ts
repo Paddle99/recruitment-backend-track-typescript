@@ -4,19 +4,27 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import compression from 'compression';
 import prisma from '@db/prisma.js';
+import { ControllerFactory } from '@controllers/ControllerFactory.js';
+import { UserRoute } from '@routes/User.route.js';
+import swaggerUi from 'swagger-ui-express';
+import openApiDoc from '@docs/openApi.js';
+import { TaxProfileRoute } from '@routes/TaxProfile.route.js';
+import { InvoiceRoute } from '@routes/Invoice.route.js';
+import { InvoiceItemRoute } from '@routes/InvoiceItem.route.js';
 
 class Server {
     private app: express.Application;
     private port: number;
     private originCors: string = 'http://localhost:3000';
 
+    private controllerFactory = new ControllerFactory();
+
     constructor(port: number) {
         this.app = express();
         this.port = port;
 
         this.initializeMiddlewares();
-        this.initializeControllers();
-        this.initializeRoutes();
+        this.initializeControllersAndRoutes();
         this.checkDbConnection();
     }
 
@@ -36,11 +44,35 @@ class Server {
 
         // compression for response
         this.app.use(compression());
+
+        // swagger for API documentation
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDoc));
     }
 
-    private initializeControllers(): void {}
+    private initializeControllersAndRoutes(): void {
+        const userController = this.controllerFactory.createUserController();
 
-    private initializeRoutes(): void {}
+        const taxProfileController =
+            this.controllerFactory.createTaxProfileController();
+
+        const invoiceController =
+            this.controllerFactory.createInvoiceController();
+
+        const invoiceItemController =
+            this.controllerFactory.createInvoiceItemController();
+
+        const userRoute = new UserRoute(userController);
+        const taxProfileRoute = new TaxProfileRoute(taxProfileController);
+        const invoiceRoute = new InvoiceRoute(invoiceController);
+        const invoiceItemRoute = new InvoiceItemRoute(invoiceItemController);
+
+        this.app.use(userRoute.path, userRoute.router);
+        this.app.use(taxProfileRoute.path, taxProfileRoute.router);
+        this.app.use(invoiceRoute.path, invoiceRoute.router);
+        this.app.use(invoiceItemRoute.path, invoiceItemRoute.router);
+    }
+
+    private initializeErrorHandling(): void {}
 
     private async checkDbConnection(): Promise<void> {
         try {
@@ -55,6 +87,9 @@ class Server {
     public listen(): void {
         this.app.listen(this.port, () => {
             console.log(`Server is running on port ${this.port}`);
+            console.log(
+                `API docs available at http://localhost:${this.port}/api-docs`
+            );
         });
     }
 }

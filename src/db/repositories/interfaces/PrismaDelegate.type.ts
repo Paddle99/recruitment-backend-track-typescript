@@ -5,4 +5,5 @@ export type PrismaDelegate<TModel> = {
     create(args: { data: TModel }): Promise<TModel>;
     update(args: { where: any; data: Partial<TModel> }): Promise<TModel>;
     delete(args: { where: any }): Promise<TModel>;
+    count?(args?: { where?: any }): Promise<number>;
 };

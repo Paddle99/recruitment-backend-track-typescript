@@ -25,11 +25,12 @@
       "@controllers/*": ["src/controllers/*"],
       "@db/*": ["src/db/*"],
       "@middlewares/*": ["src/middlewares/*"],
-      "@models/*": ["src/models/*"],
+      "@dto/*": ["src/models/dto/*"],
       "@repositories/*": ["src/db/repositories/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@docs/*": ["src/docs/*"]
     },
 
     /* Strictness */
