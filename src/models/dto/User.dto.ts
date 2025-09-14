@@ -63,6 +63,11 @@ export const UserPaginationSchema = z.object({
     lastName: z.string().optional(),
 });
 
+export const LoginSchema = z.object({
+    email: z.email(),
+    password: z.string().min(6),
+});
+
 // response schemas
 export const UsersListSchema = z.array(
     z.object({
@@ -138,12 +143,23 @@ export const UsersPaginatedResponseSchema = z.object({
     }),
 });
 
+export const LoginResponseSchema = z.object({
+    token: z.string().describe('JWT token to access protected routes'),
+});
+
+export const LoginErrorSchema = z.object({
+    message: z.string(),
+});
+
 // types
 export type UserCreateDTO = z.infer<typeof UserCreateSchema>;
 export type UserUpdateDTO = z.infer<typeof UserUpdateSchema>;
 export type UserDTO = z.infer<typeof UserSchema>;
+export type LoginDTO = z.infer<typeof LoginSchema>;
 export type UsersListDTO = z.infer<typeof UsersListSchema>;
 export type UserPaginationDTO = z.infer<typeof UserPaginationSchema>;
 export type UserPaginatedResponseDTO = z.infer<
     typeof UsersPaginatedResponseSchema
 >;
+export type LoginResponseDTO = z.infer<typeof LoginResponseSchema>;
+export type LoginErrorDTO = z.infer<typeof LoginErrorSchema>;

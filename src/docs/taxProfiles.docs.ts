@@ -15,6 +15,7 @@ export const getAllTaxProfilesPath = {
             description:
                 'Endpoint to retrieve the complete list of tax profiles',
             tags: ['TaxProfiles'],
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'Tax profiles list retrieved successfully',
@@ -34,6 +35,7 @@ export const getTaxProfileByIdPath = {
             summary: 'Get tax profile by ID',
             description: 'Endpoint to retrieve a tax profile by its ID',
             tags: ['TaxProfiles'],
+            security: [{ bearerAuth: [] }],
             requestParams: { path: IdParamSchema },
             responses: {
                 '200': {
@@ -56,6 +58,7 @@ export const createTaxProfilePath = {
             summary: 'Create a new tax profile',
             description: 'Endpoint to create a new tax profile',
             tags: ['TaxProfiles'],
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -83,6 +86,7 @@ export const updateTaxProfilePath = {
             description: 'Endpoint to update an existing tax profile by ID',
             tags: ['TaxProfiles'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -111,6 +115,7 @@ export const deleteTaxProfilePath = {
             description: 'Endpoint to delete a tax profile by ID',
             tags: ['TaxProfiles'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'Tax profile deleted successfully',
@@ -134,6 +139,7 @@ export const getTaxProfilesPaginatedPath = {
                 'Endpoint to retrieve a list of tax profiles with pagination support (skip, take) and optional filters on name, taxId, city, and postalCode',
             tags: ['TaxProfiles'],
             requestQuery: { query: TaxProfilePaginationSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description:

@@ -5,6 +5,8 @@ import type {
     UserPaginationDTO,
     UserUpdateDTO,
 } from '@dto/User.dto.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export class UserService {
     private userRepository: IUserRepository;
@@ -25,10 +27,32 @@ export class UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public async createUser(data: UserCreateDTO) {
-        console.log(data);
+    public async login(email: string, password: string) {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) return null;
 
-        return this.userRepository.create(data);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return null;
+
+        const jwt_secret = process.env.JWT_SECRET;
+        if (!jwt_secret) throw new Error('JWT_SECRET is not defined');
+
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            jwt_secret,
+            { expiresIn: '1h' }
+        );
+
+        return { user, token };
+    }
+
+    public async createUser(data: UserCreateDTO) {
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+
+        return this.userRepository.create({
+            ...data,
+            password: hashedPassword,
+        });
     }
 
     public async updateUser(id: string, data: UserUpdateDTO) {

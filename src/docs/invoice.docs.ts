@@ -14,6 +14,7 @@ export const getAllInvoicesPath = {
             summary: 'Get all invoices',
             description: 'Endpoint to retrieve the complete list of invoices',
             tags: ['Invoices'],
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'Invoices list retrieved successfully',
@@ -33,6 +34,7 @@ export const getInvoiceByIdPath = {
             summary: 'Get invoice by ID',
             description: 'Endpoint to retrieve an invoice by its ID',
             tags: ['Invoices'],
+            security: [{ bearerAuth: [] }],
             requestParams: { path: IdParamSchema },
             responses: {
                 '200': {
@@ -53,6 +55,7 @@ export const createInvoicePath = {
             summary: 'Create a new invoice',
             description: 'Endpoint to create a new invoice',
             tags: ['Invoices'],
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -78,6 +81,7 @@ export const updateInvoicePath = {
             description: 'Endpoint to update an existing invoice by ID',
             tags: ['Invoices'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -104,6 +108,7 @@ export const deleteInvoicePath = {
             description: 'Endpoint to delete an invoice by ID',
             tags: ['Invoices'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'Invoice deleted successfully',
@@ -125,6 +130,7 @@ export const getInvoicesPaginatedPath = {
                 'Endpoint to retrieve a list of invoices with pagination support (skip, take) and optional filters on number, status, and taxProfileId',
             tags: ['Invoices'],
             requestQuery: { query: InvoicePaginationSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description:

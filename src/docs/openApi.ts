@@ -13,6 +13,13 @@ const openApiSpec = createDocument({
         description: 'API documentation generated with Zod and zod-openapi',
     },
     components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            },
+        },
         schemas: {
             ...userComponents.schemas,
             ...taxProfileComponents.schemas,
@@ -28,6 +35,7 @@ const openApiSpec = createDocument({
         ...userDocs.createUserPath,
         ...userDocs.updateUserPath,
         ...userDocs.deleteUserPath,
+        ...userDocs.loginUserPath,
 
         ...taxProfileDocs.getAllTaxProfilesPath,
         ...taxProfileDocs.getTaxProfileByIdPath,

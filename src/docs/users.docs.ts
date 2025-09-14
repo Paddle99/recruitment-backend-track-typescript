@@ -6,6 +6,9 @@ import {
     UserUpdateSchema,
     UserPaginationSchema,
     UsersPaginatedResponseSchema,
+    LoginSchema,
+    LoginResponseSchema,
+    LoginErrorSchema,
 } from '@dto/User.dto.js';
 
 export const getAllUsersPath = {
@@ -14,6 +17,7 @@ export const getAllUsersPath = {
             summary: 'Get all users',
             description: 'Endpoint to retrieve the complete list of users',
             tags: ['Users'],
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'User list retrieved successfully',
@@ -34,6 +38,7 @@ export const getUserByIdPath = {
             description: 'Endpoint to retrieve a user by their ID',
             tags: ['Users'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'User details retrieved successfully',
@@ -54,6 +59,7 @@ export const getUserByEmailPath = {
             description: 'Endpoint to retrieve a user by their email address',
             tags: ['Users'],
             requestParams: { path: EmailParamSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'User details retrieved successfully',
@@ -70,8 +76,9 @@ export const getUserByEmailPath = {
 export const createUserPath = {
     '/users/create': {
         post: {
-            summary: 'Create a new user',
-            description: 'Endpoint to create a new user in the system',
+            summary: 'Register a new user',
+            description:
+                'Endpoint to create/register a new user. The password will be hashed automatically.',
             tags: ['Users'],
             requestBody: {
                 required: true,
@@ -96,6 +103,7 @@ export const updateUserPath = {
             description: 'Endpoint to update an existing user by ID',
             tags: ['Users'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: { 'application/json': { schema: UserUpdateSchema } },
@@ -120,6 +128,7 @@ export const deleteUserPath = {
             description: 'Endpoint to delete a user by ID',
             tags: ['Users'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'User deleted successfully',
@@ -141,6 +150,7 @@ export const getUsersPaginatedPath = {
                 'Endpoint to retrieve a list of users with pagination support (skip, take) and optional filters on email, firstName, and lastName',
             tags: ['Users'],
             requestQuery: { query: UserPaginationSchema },
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description:
@@ -152,6 +162,37 @@ export const getUsersPaginatedPath = {
                     },
                 },
                 '500': { description: 'Internal server error' },
+            },
+        },
+    },
+};
+
+export const loginUserPath = {
+    '/users/login': {
+        post: {
+            summary: 'Login user',
+            description: 'Endpoint to login a user and get a JWT token',
+            tags: ['Users'],
+            requestBody: {
+                required: true,
+                content: { 'application/json': { schema: LoginSchema } },
+            },
+            responses: {
+                '200': {
+                    description: 'User logged in successfully',
+                    content: {
+                        'application/json': { schema: LoginResponseSchema },
+                    },
+                },
+                '401': {
+                    description: 'Invalid email or password',
+                    content: {
+                        'application/json': { schema: LoginErrorSchema },
+                    },
+                },
+                '500': {
+                    description: 'Internal server error',
+                },
             },
         },
     },
@@ -174,4 +215,5 @@ export const userDocs = {
     updateUserPath,
     deleteUserPath,
     getUsersPaginatedPath,
+    loginUserPath,
 };

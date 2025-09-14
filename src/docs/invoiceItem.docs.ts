@@ -15,6 +15,7 @@ export const getAllInvoiceItemsPath = {
             description:
                 'Endpoint to retrieve the complete list of invoice items',
             tags: ['InvoiceItems'],
+            security: [{ bearerAuth: [] }],
             responses: {
                 '200': {
                     description: 'Invoice items list retrieved successfully',
@@ -34,6 +35,7 @@ export const getInvoiceItemByIdPath = {
             summary: 'Get invoice item by ID',
             description: 'Endpoint to retrieve an invoice item by its ID',
             tags: ['InvoiceItems'],
+            security: [{ bearerAuth: [] }],
             requestParams: { path: IdParamSchema },
             responses: {
                 '200': {
@@ -56,6 +58,7 @@ export const createInvoiceItemPath = {
             summary: 'Create a new invoice item',
             description: 'Endpoint to create a new invoice item',
             tags: ['InvoiceItems'],
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -83,6 +86,7 @@ export const updateInvoiceItemPath = {
             description: 'Endpoint to update an existing invoice item by ID',
             tags: ['InvoiceItems'],
             requestParams: { path: IdParamSchema },
+            security: [{ bearerAuth: [] }],
             requestBody: {
                 required: true,
                 content: {
@@ -110,6 +114,7 @@ export const deleteInvoiceItemPath = {
             summary: 'Delete invoice item by ID',
             description: 'Endpoint to delete an invoice item by ID',
             tags: ['InvoiceItems'],
+            security: [{ bearerAuth: [] }],
             requestParams: { path: IdParamSchema },
             responses: {
                 '200': {
@@ -133,6 +138,7 @@ export const getInvoiceItemsPaginatedPath = {
             description:
                 'Endpoint to retrieve a list of invoice items with pagination support (skip, take) and optional filters on description and invoiceId',
             tags: ['InvoiceItems'],
+            security: [{ bearerAuth: [] }],
             requestQuery: { query: InvoiceItemPaginationSchema },
             responses: {
                 '200': {

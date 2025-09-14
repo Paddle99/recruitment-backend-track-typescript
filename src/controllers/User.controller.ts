@@ -8,6 +8,7 @@ import {
     UserPaginationSchema,
     UsersPaginatedResponseSchema,
     type UserPaginatedResponseDTO,
+    LoginSchema,
 } from '../models/dto/User.dto.js';
 import { ServerError } from '@middlewares/ServerError.js';
 
@@ -65,6 +66,20 @@ export class UserController {
             if (!user) throw new ServerError('User not found', 404);
 
             const result = UserSchema.parse(user);
+
+            return res.status(200).json(result);
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    public login = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { email, password } = LoginSchema.parse(req.body);
+
+            const result = await this.userService.login(email, password);
+
+            if (!result) throw new ServerError('Invalid credentials', 401);
 
             return res.status(200).json(result);
         } catch (err) {
