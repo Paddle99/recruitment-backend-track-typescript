@@ -1,20 +1,16 @@
-import {
-    PrismaClient,
-    type User,
-    type TaxProfile,
-    type Invoice,
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 async function main() {
     console.log('Seeding database...');
 
-    const users: User[] = [];
+    const users = [];
     for (let i = 1; i <= 5; i++) {
         const email = `user${i}-${Date.now()}@example.com`;
         const user = await prisma.user.create({
             data: {
-                email: email,
+                email,
                 password: `password${i}`,
                 firstName: `First${i}`,
                 lastName: `Last${i}`,
@@ -23,7 +19,7 @@ async function main() {
         users.push(user);
     }
 
-    const taxProfiles: TaxProfile[] = [];
+    const taxProfiles = [];
     for (const user of users) {
         for (let j = 1; j <= 2; j++) {
             const profile = await prisma.taxProfile.create({
@@ -40,7 +36,7 @@ async function main() {
         }
     }
 
-    const invoices: Invoice[] = [];
+    const invoices = [];
     for (const profile of taxProfiles) {
         for (let k = 1; k <= 3; k++) {
             const subtotal = Math.floor(100 + Math.random() * 900);

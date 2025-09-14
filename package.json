@@ -23,7 +23,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
-    "seed": "ts-node --esm prisma/seed.ts",
+    "seed": "node prisma/seed.js",
     "test": "vitest",
     "test:integration": "vitest run src/tests/integration --environment=node",
     "test:coverage": "vitest run --coverage"
